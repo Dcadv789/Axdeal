@@ -1,0 +1,73 @@
+{
+  "niveis": {
+    "nivel1": {
+      "perfilBadge": "Perfil: Emergência",
+      "faixaScore": "0-350",
+      "foco": "Salvamento e Estancar a Sangria",
+      "pf": {
+        "titulo": "Diagnóstico urgente da vida financeira",
+        "orientacao": "Conduza uma conversa direta sobre dor imediata: falta de caixa, descontrole e risco de novas perdas.",
+        "scriptWhatsApp": "Oi! Vi seu cenário e quero te ajudar a estancar perdas agora. Em 15 minutos te mostro um plano simples para recuperar controle e evitar novos erros. Pode ser hoje?",
+        "scriptCall": "Hoje o foco não é crescer, é parar a sangria. Vamos organizar o básico para você ganhar fôlego e voltar a tomar decisão com clareza."
+      },
+      "pj": {
+        "titulo": "Contenção imediata para empresa",
+        "orientacao": "Ataque os gargalos de caixa e operação. Mostre ganho rápido e redução de risco nos próximos 30 dias.",
+        "scriptWhatsApp": "Seu negócio precisa de ação rápida para parar desperdícios e proteger caixa. Tenho um plano prático para os próximos 30 dias. Te explico em 15 minutos?",
+        "scriptCall": "Antes de pensar em expansão, precisamos estabilizar a operação. Vamos priorizar caixa, custos e rotina financeira para parar perdas."
+      }
+    },
+    "nivel2": {
+      "perfilBadge": "Perfil: Corrida dos Ratos",
+      "faixaScore": "351-650",
+      "foco": "Organização e Falta de Tempo",
+      "pf": {
+        "titulo": "Organização para sair do ciclo de correria",
+        "orientacao": "Mostre como rotina e método reduzem ansiedade e aumentam previsibilidade.",
+        "scriptWhatsApp": "Percebi que você está fazendo muito esforço, mas sem estrutura clara. Posso te mostrar um método simples para organizar decisões e ganhar tempo. Falamos hoje?",
+        "scriptCall": "Seu problema não é falta de esforço, é falta de sistema. Com processo certo, você para de apagar incêndio e começa a avançar com consistência."
+      },
+      "pj": {
+        "titulo": "Padronização para destravar operação",
+        "orientacao": "Foque em governança leve, rotina de indicadores e delegação para reduzir dependência do dono.",
+        "scriptWhatsApp": "Seu time pode produzir mais com menos retrabalho. Quero te mostrar um playbook de organização que melhora gestão e libera sua agenda. Pode ser?",
+        "scriptCall": "A empresa cresce quando o dono sai da operação tática. Vamos estruturar rotina, indicadores e responsabilidades para ganhar escala com controle."
+      }
+    },
+    "nivel3": {
+      "perfilBadge": "Perfil: Multiplicação",
+      "faixaScore": "651-850",
+      "foco": "Mentoria e Dinheiro em Movimento",
+      "pf": {
+        "titulo": "Acelerar patrimônio com estratégia",
+        "orientacao": "Direcione para decisões de alocação, eficiência e foco em multiplicação de capital.",
+        "scriptWhatsApp": "Você já construiu base. Agora é hora de fazer o dinheiro trabalhar melhor. Tenho uma abordagem para acelerar crescimento com segurança. Conversamos?",
+        "scriptCall": "Seu próximo salto vem de estratégia, não de mais esforço. Vamos revisar alocação, prioridades e execução para multiplicar resultado."
+      },
+      "pj": {
+        "titulo": "Escalar margens e capital da empresa",
+        "orientacao": "Trabalhe eficiência financeira, reinvestimento inteligente e expansão com critério.",
+        "scriptWhatsApp": "Sua empresa já tem tração. Vamos transformar isso em crescimento mais rentável e previsível. Te mostro um plano de escala em uma conversa rápida.",
+        "scriptCall": "Agora o jogo é eficiência e escala. Vamos organizar capital, margem e reinvestimento para crescer sem perder controle."
+      }
+    },
+    "nivel4": {
+      "perfilBadge": "Perfil: Estratégia Sênior",
+      "faixaScore": "851-1000",
+      "foco": "Escala Patrimonial e Eficiência Avançada",
+      "pf": {
+        "titulo": "Arquitetura patrimonial de alta performance",
+        "orientacao": "Conduza como advisor: proteção, eficiência tributária e expansão sustentável de patrimônio.",
+        "scriptWhatsApp": "Seu nível pede estratégia sênior: preservar, otimizar e escalar patrimônio com eficiência. Posso te apresentar uma visão consultiva avançada?",
+        "scriptCall": "Você já está em outro patamar. Agora precisamos de arquitetura patrimonial: eficiência, proteção e crescimento de longo prazo com governança."
+      },
+      "pj": {
+        "titulo": "Estratégia executiva para escala sustentável",
+        "orientacao": "Fale de estrutura corporativa, alocação de capital e decisões de alto impacto com visão de longo prazo.",
+        "scriptWhatsApp": "Sua empresa está no ponto de decisões estratégicas de alto impacto. Quero te apresentar um plano executivo para escalar com eficiência e governança.",
+        "scriptCall": "Neste estágio, o diferencial é estratégia executiva: capital eficiente, estrutura robusta e crescimento sustentável."
+      }
+    }
+  }
+}
+

@@ -1,0 +1,20 @@
+{
+  "name": "axdeal",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "ecossistema_axory"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=ecossistema-axory",
+    "build": "npm run build --workspace=ecossistema-axory",
+    "start": "npm run start --workspace=ecossistema-axory",
+    "lint": "npx turbo lint",
+    "typecheck": "npx turbo typecheck",
+    "clean": "npx turbo clean"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  },
+  "packageManager": "npm@10.0.0"
+}
