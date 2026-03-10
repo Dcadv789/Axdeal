@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { supabase } from '../lib/supabase';
+import { isSupabaseConfigured, supabase, supabaseConfigMessage } from '../lib/supabase';
 import type { User, Session } from '@supabase/supabase-js';
 
 interface AuthContextType {
@@ -41,6 +41,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setSession(null);
+      setUser(null);
+      setIdEmpresa(null);
+      setLoading(false);
+      return;
+    }
+
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -75,6 +83,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    if (!isSupabaseConfigured) {
+      return { error: new Error(supabaseConfigMessage) };
+    }
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -95,6 +107,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signUp = async (email: string, password: string) => {
+    if (!isSupabaseConfigured) {
+      return { error: new Error(supabaseConfigMessage) };
+    }
+
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -107,6 +123,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
+    if (!isSupabaseConfigured) return;
     await supabase.auth.signOut();
     if (typeof window !== 'undefined') {
       localStorage.removeItem('sortTooltipDismissed');

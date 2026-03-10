@@ -26,6 +26,8 @@ export default function LoginPage() {
         'User not found': 'Nenhum usuário encontrado com este email.',
         'Too many requests': 'Muitas tentativas. Aguarde um momento e tente novamente.',
         'Network request failed': 'Erro de conexão. Verifique sua internet.',
+        'Supabase nao configurado': 'Configuracao do Supabase ausente. Defina NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY no Netlify (Build e Runtime) e publique novamente.',
+        'Failed to fetch': 'Nao foi possivel conectar ao Supabase. Verifique as variaveis NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY no Netlify.',
       };
 
       const friendlyMsg = Object.entries(errorMap).find(([key]) =>
@@ -248,3 +250,4 @@ export default function LoginPage() {
     </div>
   );
 }
+
