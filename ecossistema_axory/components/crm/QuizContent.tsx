@@ -24,6 +24,17 @@ interface QuizContentProps {
 const SCORE_MAXIMO = 1000;
 const DEBUG_SCORE = true;
 
+function gerarUuidCliente(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.floor(Math.random() * 16);
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 function normalizarValorScore(valor: unknown): number {
   if (typeof valor === 'number') return Number.isFinite(valor) ? valor : 0;
   if (typeof valor === 'string') {
@@ -181,7 +192,9 @@ export default function QuizContent({ slug }: QuizContentProps) {
     if (!quiz) return null;
 
     const scoreInicial = calcularScoreTotal(respostasLog);
+    const novoLeadId = gerarUuidCliente();
     const payload = {
+      id: novoLeadId,
       id_empresa: quiz.id_empresa,
       id_quiz: quiz.id,
       nome: formContato.nome.trim() || 'Novo Lead',
@@ -201,18 +214,16 @@ export default function QuizContent({ slug }: QuizContentProps) {
     };
 
     const promessa = (async () => {
-      const { data, error: insertError } = await supabase
+      const { error: insertError } = await supabase
         .from('crm_leads')
-        .insert(payload)
-        .select('id')
-        .single();
+        .insert(payload);
 
       if (insertError) {
         console.error('Erro ao criar lead inicial:', insertError, payload);
+        setError('Erro ao registrar lead do quiz. Verifique as políticas RLS do Supabase.');
         return null;
       }
 
-      const novoLeadId = (data as { id: string }).id;
       setLeadId(novoLeadId);
       leadIdRef.current = novoLeadId;
       await vincularLeadNoPipeline(novoLeadId, quiz.id_pipeline);
