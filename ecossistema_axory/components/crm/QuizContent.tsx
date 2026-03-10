@@ -153,8 +153,7 @@ export default function QuizContent({ slug }: QuizContentProps) {
         .limit(1)
         .maybeSingle();
       if (etapaErr) {
-        console.error('Erro ao buscar etapa inicial do pipeline:', etapaErr);
-        return;
+        console.warn('Erro ao buscar etapa inicial do pipeline. Lead seguir\u00e1 sem etapa inicial:', etapaErr);
       }
 
       const payload = {
@@ -195,7 +194,6 @@ export default function QuizContent({ slug }: QuizContentProps) {
       utm_term: utmCaptura.utm_term,
       utm_content: utmCaptura.utm_content,
       utm_id: utmCaptura.utm_id,
-      telefone: null,
       score_qualificacao: scoreInicial,
       origem: 'Quiz',
       status_conversao: 'novo',
@@ -210,7 +208,7 @@ export default function QuizContent({ slug }: QuizContentProps) {
         .single();
 
       if (insertError) {
-        console.error('Erro ao criar lead inicial:', insertError);
+        console.error('Erro ao criar lead inicial:', insertError, payload);
         return null;
       }
 
