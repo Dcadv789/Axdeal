@@ -29,7 +29,7 @@ export default function CreateButton({ isCollapsed, isMenuOpen, onToggleMenu }: 
       <button
         onClick={() => onToggleMenu(!isMenuOpen)}
         className={`w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center font-medium transition-colors duration-200 shadow-sm ${
-          isCollapsed ? 'px-3 py-2.5 justify-center' : 'px-6 py-3 gap-2'
+          isCollapsed ? 'h-11 px-4 justify-center' : 'h-11 px-6 gap-2 justify-center'
         }`}
       >
         <Plus className="w-4 h-4" />

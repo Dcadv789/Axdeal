@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useRouter } from 'next/navigation';
 import { ChevronRight, Home } from 'lucide-react';
@@ -6,6 +6,21 @@ import { ChevronRight, Home } from 'lucide-react';
 interface BreadcrumbBarProps {
   breadcrumbs: { label: string; href?: string }[];
   onBreadcrumbClick?: (label: string, href: string | undefined, index: number) => boolean | void;
+}
+
+function normalizarTexto(valor: string): string {
+  return (valor || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z]/g, '');
+}
+
+function isHomeCrumb(crumb: { label: string; href?: string }, index: number): boolean {
+  if (index !== 0) return false;
+  if (crumb.href === '/erp/dashboard') return true;
+  const texto = normalizarTexto(crumb.label);
+  return texto === 'inicio' || texto === 'home';
 }
 
 export default function BreadcrumbBar({ breadcrumbs, onBreadcrumbClick }: BreadcrumbBarProps) {
@@ -18,8 +33,6 @@ export default function BreadcrumbBar({ breadcrumbs, onBreadcrumbClick }: Breadc
       router.push(crumb.href);
     }
   };
-
-  const isHome = (crumb: { label: string }) => crumb.label.toLowerCase() === 'início';
 
   return (
     <nav className="flex items-center gap-2 text-sm min-w-0">
@@ -37,7 +50,7 @@ export default function BreadcrumbBar({ breadcrumbs, onBreadcrumbClick }: Breadc
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
             }`}
           >
-            {index === 0 && isHome(crumb) ? (
+            {isHomeCrumb(crumb, index) ? (
               <Home size={16} className="flex-shrink-0" aria-label="Início" />
             ) : (
               crumb.label

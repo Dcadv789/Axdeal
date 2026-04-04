@@ -4,7 +4,7 @@ import { HelpCircle } from 'lucide-react';
 import TopBar from '@/components/ui/TopBar';
 import PageContainer from '@/components/ui/PageContainer';
 import PageTitle from '@/components/ui/PageTitle';
-import SupportContent from '@/components/erp/SupportContent';
+import SupportContent from '@/components/erp/suporte/SupportContent';
 
 export default function ErpSuportePage() {
   return (

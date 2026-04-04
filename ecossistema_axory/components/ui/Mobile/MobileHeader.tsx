@@ -1,10 +1,12 @@
-import { Settings, Moon, Sun, Building2, Users, User, Package, Settings2, Bell } from 'lucide-react';
+'use client';
+
+import { useState } from 'react';
+import { Settings, Moon, Sun, Building2, Users, User } from 'lucide-react';
 import { LOGO_URLS } from '@/config/logos';
 import { COMPANY_INFO } from '@/config/company';
 import { useTheme } from '@/contexts/ThemeContext';
 import { PageType, ConfigTab } from '@/types';
 import MobileBottomSheet from './MobileBottomSheet';
-import { useState } from 'react';
 
 interface MobileHeaderProps {
   onNavigate: (page: PageType) => void;
@@ -12,33 +14,30 @@ interface MobileHeaderProps {
 }
 
 export default function MobileHeader({ onNavigate, onNavigateWithTab }: MobileHeaderProps) {
+  void onNavigate;
   const { isDark, toggleTheme } = useTheme();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
 
   return (
     <>
-      <div className="bg-white dark:bg-black border-b border-[#E5E7EB] dark:border-[#262626] px-4 py-3">
+      <div className="border-b border-[#E5E7EB] bg-white px-4 py-3 dark:border-[#262626] dark:bg-black">
         <div className="flex items-center justify-between">
           <button
             onClick={() => setIsProfileMenuOpen(true)}
-            className="w-9 h-9 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-semibold hover:shadow-lg transition-shadow"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-purple-600 text-xs font-semibold text-white transition-shadow hover:shadow-lg"
           >
             {COMPANY_INFO.userInitials}
           </button>
 
-          <div className="flex-1 flex justify-center">
-            <img
-              src={isDark ? LOGO_URLS.dark : LOGO_URLS.light}
-              alt="Logo"
-              className="h-8 w-auto"
-            />
+          <div className="flex flex-1 justify-center">
+            <img src={isDark ? LOGO_URLS.dark : LOGO_URLS.light} alt="Logo" className="h-8 w-auto" />
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsSettingsMenuOpen(true)}
-              className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10"
             >
               <Settings size={20} />
             </button>
@@ -46,39 +45,31 @@ export default function MobileHeader({ onNavigate, onNavigateWithTab }: MobileHe
         </div>
       </div>
 
-      <MobileBottomSheet
-        isOpen={isProfileMenuOpen}
-        onClose={() => setIsProfileMenuOpen(false)}
-        title="Perfil"
-      >
-        <div className="border border-[#E5E7EB] dark:border-[#262626] rounded-lg overflow-hidden divide-y divide-[#E5E7EB] dark:divide-[#262626]">
+      <MobileBottomSheet isOpen={isProfileMenuOpen} onClose={() => setIsProfileMenuOpen(false)} title="Perfil">
+        <div className="divide-y divide-[#E5E7EB] overflow-hidden rounded-lg border border-[#E5E7EB] dark:divide-[#262626] dark:border-[#262626]">
           <button
             onClick={() => {
               onNavigateWithTab('configuracoes', 'perfil');
               setIsProfileMenuOpen(false);
             }}
-            className="w-full text-left px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors font-medium"
+            className="w-full px-4 py-3 text-left font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10"
           >
             Meu Perfil
           </button>
-          <button className="w-full text-left px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors font-medium">
+          <button className="w-full px-4 py-3 text-left font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/20">
             Sair
           </button>
         </div>
       </MobileBottomSheet>
 
-      <MobileBottomSheet
-        isOpen={isSettingsMenuOpen}
-        onClose={() => setIsSettingsMenuOpen(false)}
-        title="Configurações"
-      >
-        <div className="border border-[#E5E7EB] dark:border-[#262626] rounded-lg overflow-hidden divide-y divide-[#E5E7EB] dark:divide-[#262626]">
+      <MobileBottomSheet isOpen={isSettingsMenuOpen} onClose={() => setIsSettingsMenuOpen(false)} title="Configurações">
+        <div className="divide-y divide-[#E5E7EB] overflow-hidden rounded-lg border border-[#E5E7EB] dark:divide-[#262626] dark:border-[#262626]">
           <button
             onClick={() => {
               onNavigateWithTab('configuracoes', 'empresa');
               setIsSettingsMenuOpen(false);
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors font-medium"
+            className="flex w-full items-center gap-3 px-4 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10"
           >
             <Building2 size={20} className="text-gray-600 dark:text-gray-400" />
             Empresa
@@ -88,7 +79,7 @@ export default function MobileHeader({ onNavigate, onNavigateWithTab }: MobileHe
               onNavigateWithTab('configuracoes', 'usuarios');
               setIsSettingsMenuOpen(false);
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors font-medium"
+            className="flex w-full items-center gap-3 px-4 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10"
           >
             <Users size={20} className="text-gray-600 dark:text-gray-400" />
             Usuários
@@ -98,44 +89,14 @@ export default function MobileHeader({ onNavigate, onNavigateWithTab }: MobileHe
               onNavigateWithTab('configuracoes', 'perfil');
               setIsSettingsMenuOpen(false);
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors font-medium"
+            className="flex w-full items-center gap-3 px-4 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10"
           >
             <User size={20} className="text-gray-600 dark:text-gray-400" />
             Meu Perfil
           </button>
           <button
-            onClick={() => {
-              onNavigateWithTab('configuracoes', 'servicos');
-              setIsSettingsMenuOpen(false);
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors font-medium"
-          >
-            <Package size={20} className="text-gray-600 dark:text-gray-400" />
-            Serviços e Produtos
-          </button>
-          <button
-            onClick={() => {
-              onNavigateWithTab('configuracoes', 'parametros');
-              setIsSettingsMenuOpen(false);
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors font-medium"
-          >
-            <Settings2 size={20} className="text-gray-600 dark:text-gray-400" />
-            Parâmetros de Vendas
-          </button>
-          <button
-            onClick={() => {
-              onNavigateWithTab('configuracoes', 'regua_cobranca');
-              setIsSettingsMenuOpen(false);
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors font-medium"
-          >
-            <Bell size={20} className="text-gray-600 dark:text-gray-400" />
-            Régua de Cobrança
-          </button>
-          <button
             onClick={toggleTheme}
-            className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors font-medium"
+            className="flex w-full items-center gap-3 px-4 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/10"
           >
             {isDark ? (
               <Sun size={20} className="text-gray-600 dark:text-gray-400" />

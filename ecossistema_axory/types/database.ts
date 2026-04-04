@@ -85,21 +85,36 @@ export interface ReguaCobranca {
 // ERP (erp_)
 // ============================
 
-export interface Fatura {
+export interface OrdemServico {
   id: string;
   id_empresa: string;
-  id_cliente: string;
-  id_venda: string | null;
-  id_proposta: string | null;
-  codigo_fatura: string;
+  id_usuario: string | null;
+  id_cliente: string | null;
+  id_departamento?: string | null;
+  id_projeto?: string | null;
+  codigo: string;
+  status: string;
+  valor_total: number;
+  data_emissao: string;
   descricao: string | null;
-  categoria: string | null;
-  qtd_parcelas: number | null;
-  valor_total_original: number;
-  data_emissao: string | null;
-  data_competencia: string | null;
-  status: string | null;
-  motivo_cancelamento: string | null;
+  criado_em: string | null;
+  atualizado_em: string | null;
+}
+
+export interface Contrato {
+  id: string;
+  id_empresa: string;
+  id_usuario: string | null;
+  id_cliente: string | null;
+  id_regua_cobranca?: string | null;
+  valor_recorrente: number;
+  dia_vencimento: number;
+  data_inicio: string;
+  proximo_faturamento: string | null;
+  data_proximo_reajuste?: string | null;
+  indice_reajuste?: 'IGP-M' | 'IPCA' | 'Fixo (%)' | null;
+  percentual_reajuste_fixo?: number | null;
+  status: 'ativo' | 'cancelado';
   criado_em: string | null;
   atualizado_em: string | null;
 }
@@ -107,7 +122,15 @@ export interface Fatura {
 export interface Parcela {
   id: string;
   id_empresa: string;
-  id_fatura: string;
+  id_pedido_venda?: string | null;
+  id_proposta?: string | null;
+  id_os?: string | null;
+  id_departamento?: string | null;
+  id_projeto?: string | null;
+  id_contrato?: string | null;
+  id_despesa?: string | null;
+  id_conta_bancaria?: string | null;
+  id_categoria?: string | null;
   numero_parcela: number;
   descricao_parcela: string | null;
   valor_original: number;
@@ -126,6 +149,41 @@ export interface Parcela {
   boleto_url: string | null;
   boleto_linha_digitavel: string | null;
   link_pagamento_cartao: string | null;
+}
+
+/**
+ * Item de proposta (erp_itens_proposta).
+ * Usado para itens vinculados a propostas comerciais.
+ * Itens de venda/OS ficam em erp_itens_movimentacao.
+ */
+export interface ErpItemProposta {
+  id: string;
+  id_empresa: string;
+  id_proposta: string;
+  id_item_catalogo?: string | null;
+  tipo_item: 'PRODUTO' | 'SERVICO';
+  descricao_item: string;
+  quantidade: number;
+  preco_unitario: number;
+  desconto_item: number;
+  criado_em?: string | null;
+  atualizado_em?: string | null;
+}
+
+export interface Extrato {
+  id: string;
+  id_empresa: string;
+  id_conta_bancaria: string;
+  id_parcela: string | null;
+  id_categoria: string | null;
+  id_usuario: string;
+  descricao: string | null;
+  valor: number;
+  data_pagamento: string;
+  tipo_movimentacao: 'entrada' | 'saida';
+  conciliado: boolean;
+  criado_em: string | null;
+  atualizado_em: string | null;
 }
 
 // ============================

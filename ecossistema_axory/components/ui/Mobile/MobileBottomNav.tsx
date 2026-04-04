@@ -17,7 +17,7 @@ export default function MobileBottomNav({ activePage, onNavigate }: MobileBottom
     { id: 'negocios' as PageType, icon: Briefcase, label: 'Negócios' },
     { id: 'novo', icon: Plus, label: 'Novo' },
     { id: 'financeiro' as PageType, icon: DollarSign, label: 'Financeiro' },
-    { id: 'clientes' as PageType, icon: Users, label: 'Clientes' },
+    { id: 'clientes' as PageType, icon: Users, label: 'Cadastros' },
   ];
 
   return (

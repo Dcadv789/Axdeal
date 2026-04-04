@@ -73,7 +73,7 @@ export default function Header({ title, onNovaProposta, primaryAction, novaPropo
               className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-sm transition-all shadow-sm hover:shadow-md"
             >
               <Link size={18} />
-              Finalizar e Gerar Link
+              Criar Proposta
             </button>
           </div>
         )}

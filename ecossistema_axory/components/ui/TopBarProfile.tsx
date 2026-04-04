@@ -1,16 +1,14 @@
-'use client';
+﻿'use client';
 
 import { useRef, useEffect, useLayoutEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCompany } from '@/lib/context/company-context';
-import { supabase } from '@/lib/supabase';
 import ProfileMenu from './ProfileMenu';
-import { PageType, ConfigTab } from '@/types';
 
 const ERP_PATHS: Record<string, string> = {
-  configuracoes: '/erp/configuracoes',
+  configuracoes: '/sys/configuracao',
 };
 
 function getInitials(nome: string): string {
@@ -25,39 +23,20 @@ function getInitials(nome: string): string {
 
 export default function TopBarProfile() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, memberName } = useAuth();
   const { companyName } = useCompany();
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const [nomeCompleto, setNomeCompleto] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!user?.id) return;
-
-    const fetchNomeCompleto = async () => {
-      const { data } = await supabase
-        .from('sis_membros_equipe')
-        .select('nome_completo')
-        .eq('id_usuario', user.id)
-        .maybeSingle();
-
-      if (data?.nome_completo) {
-        setNomeCompleto(data.nome_completo);
-      }
-    };
-
-    fetchNomeCompleto();
-  }, [user?.id]);
-
-  const userName = nomeCompleto || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuário';
+  const userName = memberName || user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuário';
   const userInitials = getInitials(userName);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+  const portalId = 'topbar-profile-menu-portal';
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       const inButton = buttonRef.current?.contains(target);
-      const inMenu = document.getElementById('profile-menu-portal')?.contains(target);
+      const inMenu = document.getElementById(portalId)?.contains(target);
       if (!inButton && !inMenu) {
         setIsMenuOpen(false);
       }
@@ -99,21 +78,22 @@ export default function TopBarProfile() {
           )}
         </div>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" className={`text-gray-500 dark:text-gray-400 flex-shrink-0 transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''}`}>
-          <path d="M6 5l4 3-4 3z"/>
+          <path d="M6 5l4 3-4 3z" />
         </svg>
       </button>
-      {typeof document !== 'undefined' &&
+      {typeof document !== 'undefined' && isMenuOpen && menuPosition &&
         createPortal(
           <ProfileMenu
             isOpen={isMenuOpen}
             onClose={() => setIsMenuOpen(false)}
             isCollapsed={false}
+            portalId={portalId}
             onNavigate={(page) => {
               const path = ERP_PATHS[page];
               if (path) router.push(path);
             }}
             onNavigateWithTab={(page, tab) => {
-              const path = page === 'configuracoes' ? `/erp/configuracoes${tab ? `?tab=${tab}` : ''}` : ERP_PATHS[page];
+              const path = page === 'configuracoes' ? `/sys/configuracao${tab ? `?tab=${tab}` : ''}` : ERP_PATHS[page];
               if (path) router.push(path);
             }}
             anchorPosition={menuPosition}

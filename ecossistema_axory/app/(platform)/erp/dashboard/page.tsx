@@ -4,7 +4,7 @@ import { Home } from 'lucide-react';
 import TopBar from '@/components/ui/TopBar';
 import PageContainer from '@/components/ui/PageContainer';
 import PageTitle from '@/components/ui/PageTitle';
-import DashboardContent from '@/components/erp/DashboardContent';
+import DashboardContent from '@/components/erp/dashboard/DashboardContent';
 import PeriodFilter from '@/components/ui/PeriodFilter';
 
 export default function ErpDashboardPage() {

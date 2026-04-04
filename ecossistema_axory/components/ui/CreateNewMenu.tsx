@@ -4,9 +4,10 @@ interface CreateNewMenuProps {
   isOpen: boolean;
   onClose: () => void;
   isCollapsed: boolean;
+  mode?: 'sidebar' | 'topbar';
 }
 
-export default function CreateNewMenu({ isOpen, onClose, isCollapsed }: CreateNewMenuProps) {
+export default function CreateNewMenu({ isOpen, onClose, isCollapsed, mode = 'sidebar' }: CreateNewMenuProps) {
   if (!isOpen) return null;
 
   const handleItemClick = (itemId: string) => {
@@ -14,8 +15,10 @@ export default function CreateNewMenu({ isOpen, onClose, isCollapsed }: CreateNe
     onClose();
   };
 
+  const positionClass = mode === 'topbar' ? 'right-0 top-full mt-2' : isCollapsed ? 'hidden' : 'left-full top-0';
+
   return (
-    <div className={`absolute ${isCollapsed ? 'hidden' : 'left-full top-0'} w-56 bg-white dark:bg-black rounded-lg shadow-lg border border-[#E5E7EB] dark:border-[#262626] z-50`}>
+    <div className={`absolute ${positionClass} w-56 bg-white dark:bg-black rounded-lg shadow-lg border border-[#E5E7EB] dark:border-[#262626] z-50`}>
       <div className="px-4 py-3 border-b border-[#E5E7EB] dark:border-[#262626]">
         <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Criar Novo</h3>
       </div>

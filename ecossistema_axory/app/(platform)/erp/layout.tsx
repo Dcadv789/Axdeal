@@ -14,9 +14,10 @@ const DEFAULT_PERMISSIONS: ModulePermissions = {
 
 const ERP_PATHS: Record<string, string> = {
   dashboard: '/erp/dashboard',
-  negocios: '/erp/negocios',
+  negocios: '/erp/negocios/propostas',
   financeiro: '/erp/financeiro',
-  clientes: '/erp/clientes',
+  resultados: '/erp/resultados',
+  clientes: '/erp/cadastros/contatos',
   configuracoes: '/erp/configuracoes',
   suporte: '/erp/suporte',
 };
@@ -32,12 +33,14 @@ export default function ErpLayout({ children }: { children: React.ReactNode }) {
   };
 
   const handleNavigateWithTab = (page: PageType, tab?: ConfigTab) => {
-    const path = page === 'configuracoes' ? `/erp/configuracoes${tab ? `?tab=${tab}` : ''}` : ERP_PATHS[page];
+    const path = page === 'configuracoes' ? `/sys/configuracao${tab ? `?tab=${tab}` : ''}` : ERP_PATHS[page];
     if (path) router.push(path);
   };
 
   const segment = pathname?.replace(/^\/erp\/?/, '').split('/')[0] || 'dashboard';
-  const activePage = (['dashboard', 'negocios', 'financeiro', 'clientes'].includes(segment) ? segment : 'dashboard') as PageType;
+  const activePage = ((['dashboard', 'negocios', 'financeiro', 'resultados', 'clientes', 'cadastros'].includes(segment)
+    ? (segment === 'cadastros' ? 'clientes' : segment)
+    : 'dashboard')) as PageType;
 
   if (isMobile) {
     return (

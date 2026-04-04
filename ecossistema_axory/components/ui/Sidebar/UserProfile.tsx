@@ -16,12 +16,13 @@ export default function UserProfile({ isCollapsed, isMenuOpen, onToggleMenu, onN
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+  const portalId = 'sidebar-profile-menu-portal';
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       const inButton = menuRef.current?.contains(target);
-      const inMenu = document.getElementById('profile-menu-portal')?.contains(target);
+      const inMenu = document.getElementById(portalId)?.contains(target);
       if (!inButton && !inMenu) {
         onToggleMenu(false);
       }
@@ -63,12 +64,13 @@ export default function UserProfile({ isCollapsed, isMenuOpen, onToggleMenu, onN
           </svg>
         )}
       </button>
-      {typeof document !== 'undefined' &&
+      {typeof document !== 'undefined' && isMenuOpen && menuPosition &&
         createPortal(
           <ProfileMenu
             isOpen={isMenuOpen}
             onClose={() => onToggleMenu(false)}
             isCollapsed={isCollapsed}
+            portalId={portalId}
             onNavigate={onNavigate}
             onNavigateWithTab={onNavigateWithTab}
             anchorPosition={menuPosition}

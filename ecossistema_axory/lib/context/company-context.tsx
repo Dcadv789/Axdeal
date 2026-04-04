@@ -30,8 +30,11 @@ interface CompanyContextType {
 
 const CompanyContext = createContext<CompanyContextType | undefined>(undefined);
 
+const companyNameCache = new Map<string, string>();
+let companiesCache: Company[] | null = null;
+
 export function CompanyProvider({ children }: { children: ReactNode }) {
-  const { user, idEmpresa } = useAuth();
+  const { user, idEmpresa, companyName: authCompanyName, memberRole } = useAuth();
   const [companyId, setCompanyId] = useState<string | null>(null);
   const [companyName, setCompanyName] = useState<string | null>(null);
   const [role, setRole] = useState<UserRole>('MEMBER');
@@ -41,12 +44,17 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
   const isSuperAdmin = role === 'SUPER_ADMIN';
 
   const fetchCompanyName = useCallback(async (id: string) => {
+    const cachedName = companyNameCache.get(id);
+    if (cachedName) return cachedName;
+
     const { data } = await supabase
       .from('sis_empresas')
       .select('nome_razao_social')
       .eq('id', id)
       .maybeSingle();
-    return data?.nome_razao_social ?? 'Empresa';
+    const nextName = data?.nome_razao_social ?? 'Empresa';
+    companyNameCache.set(id, nextName);
+    return nextName;
   }, []);
 
   useEffect(() => {
@@ -59,35 +67,37 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
     }
 
     const init = async () => {
-      const { data: membro } = await supabase
-        .from('sis_membros_equipe')
-        .select('id_empresa, role')
-        .eq('id_usuario', user.id)
-        .maybeSingle();
-
-      const userRole: UserRole = (membro?.role as UserRole) ?? 'MEMBER';
+      const userRole: UserRole = (memberRole as UserRole) ?? 'MEMBER';
       setRole(userRole);
 
-      const activeId = membro?.id_empresa ?? idEmpresa;
+      const activeId = idEmpresa;
       if (activeId) {
         setCompanyId(activeId);
-        const name = await fetchCompanyName(activeId);
+        const name = authCompanyName || (await fetchCompanyName(activeId));
         setCompanyName(name);
+        companyNameCache.set(activeId, name);
       }
 
       if (userRole === 'SUPER_ADMIN') {
-        setLoadingCompanies(true);
-        const { data: allCompanies } = await supabase
-          .from('sis_empresas')
-          .select('id, nome_razao_social')
-          .order('nome_razao_social');
-        setCompanies(allCompanies ?? []);
-        setLoadingCompanies(false);
+        if (companiesCache) {
+          setCompanies(companiesCache);
+        } else {
+          setLoadingCompanies(true);
+          const { data: allCompanies } = await supabase
+            .from('sis_empresas')
+            .select('id, nome_razao_social')
+            .order('nome_razao_social');
+          companiesCache = allCompanies ?? [];
+          setCompanies(companiesCache);
+          setLoadingCompanies(false);
+        }
+      } else {
+        setCompanies([]);
       }
     };
 
     init();
-  }, [user, idEmpresa, fetchCompanyName]);
+  }, [user, idEmpresa, authCompanyName, memberRole, fetchCompanyName]);
 
   const setActiveCompany = useCallback(
     async (id: string) => {

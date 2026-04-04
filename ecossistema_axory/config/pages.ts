@@ -1,4 +1,4 @@
-import { PageConfig, PageType } from '../types';
+﻿import { PageConfig, PageType } from '../types';
 
 export const PAGE_CONFIG: Record<PageType, PageConfig> = {
   negocios: {
@@ -19,6 +19,13 @@ export const PAGE_CONFIG: Record<PageType, PageConfig> = {
     breadcrumbs: [
       { label: 'Início', href: '/erp/dashboard' },
       { label: 'Financeiro' },
+    ],
+  },
+  resultados: {
+    title: 'Resultados',
+    breadcrumbs: [
+      { label: 'Início', href: '/erp/dashboard' },
+      { label: 'Resultados' },
     ],
   },
   clientes: {

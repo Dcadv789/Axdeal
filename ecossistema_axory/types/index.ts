@@ -4,24 +4,35 @@ export interface MenuItem {
   icon: React.ComponentType<{ size?: string | number }>;
 }
 
+/** Status = valor do DB (MAIÚSCULO_UNDERLINE) */
+export type PropostaStatusDb =
+  | 'RASCUNHO'
+  | 'AGUARDANDO_ENVIO'
+  | 'ENVIADA'
+  | 'VISUALIZADA'
+  | 'EM_NEGOCIACAO'
+  | 'APROVADA'
+  | 'RECUSADA'
+  | 'EXPIRADA'
+  | 'CANCELADA';
+
 export interface Proposta {
   id: number;
   numero: string;
   titulo: string;
   cliente: string;
-  status: 'rascunho' | 'aguardando_envio' | 'enviada' | 'visualizada' | 'aprovada' | 'recusada' | 'expirada';
+  status: PropostaStatusDb | string;
   tipo?: 'unico' | 'recorrente';
   valorTotal?: number;
   dataEnvio?: string;
 }
 
-export type PropostaStatus = Proposta['status'];
 
 export interface PageConfig {
   title: string;
   breadcrumbs: { label: string; href?: string }[];
 }
 
-export type PageType = 'negocios' | 'dashboard' | 'financeiro' | 'clientes' | 'configuracoes' | 'suporte';
+export type PageType = 'negocios' | 'dashboard' | 'financeiro' | 'resultados' | 'clientes' | 'configuracoes' | 'suporte';
 
-export type ConfigTab = 'empresa' | 'usuarios' | 'perfil' | 'servicos' | 'parametros' | 'regua_cobranca' | 'configuracoes_proposta';
+export type ConfigTab = 'empresa' | 'usuarios' | 'perfil';

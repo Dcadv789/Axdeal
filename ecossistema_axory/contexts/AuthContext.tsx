@@ -7,37 +7,73 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   idEmpresa: string | null;
+  companyName: string | null;
+  memberName: string | null;
+  memberRole: string | null;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
+interface MemberData {
+  idEmpresa: string | null;
+  companyName: string | null;
+  memberName: string | null;
+  memberRole: string | null;
+}
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const memberCache = new Map<string, MemberData>();
+const memberPromiseCache = new Map<string, Promise<MemberData>>();
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [idEmpresa, setIdEmpresa] = useState<string | null>(null);
+  const [companyName, setCompanyName] = useState<string | null>(null);
+  const [memberName, setMemberName] = useState<string | null>(null);
+  const [memberRole, setMemberRole] = useState<string | null>(null);
 
-  const buscarIdEmpresa = async (userId: string) => {
+  const buscarMembro = async (userId: string): Promise<MemberData> => {
+    const cachedMember = memberCache.get(userId);
+    if (cachedMember) return cachedMember;
+
+    const pendingPromise = memberPromiseCache.get(userId);
+    if (pendingPromise) return pendingPromise;
+
+    const nextPromise = (async () => {
     try {
       const { data, error } = await supabase
         .from('sis_membros_equipe')
-        .select('id_empresa')
+        .select('id_empresa, nome_completo, id_cargo, sis_empresas(nome_razao_social)')
         .eq('id_usuario', userId)
         .maybeSingle();
 
       if (error) {
-        console.error('Erro ao buscar id_empresa:', error);
-        return null;
+        console.error('Erro ao buscar membro:', error);
+        return { idEmpresa: null, companyName: null, memberName: null, memberRole: null };
       }
 
-      return data?.id_empresa || null;
+      const memberData = {
+        idEmpresa: data?.id_empresa || null,
+        companyName:
+          (data?.sis_empresas as { nome_razao_social?: string | null } | null)?.nome_razao_social || null,
+        memberName: data?.nome_completo || null,
+        memberRole: data?.id_cargo || null,
+      };
+      memberCache.set(userId, memberData);
+      return memberData;
     } catch (error) {
-      console.error('Erro ao buscar id_empresa:', error);
-      return null;
+      console.error('Erro ao buscar membro:', error);
+      return { idEmpresa: null, companyName: null, memberName: null, memberRole: null };
+    } finally {
+      memberPromiseCache.delete(userId);
     }
+    })();
+
+    memberPromiseCache.set(userId, nextPromise);
+    return nextPromise;
   };
 
   useEffect(() => {
@@ -45,6 +81,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(null);
       setUser(null);
       setIdEmpresa(null);
+      setCompanyName(null);
+      setMemberName(null);
+      setMemberRole(null);
       setLoading(false);
       return;
     }
@@ -54,10 +93,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
 
       if (session?.user?.id) {
-        const empresa = await buscarIdEmpresa(session.user.id);
-        setIdEmpresa(empresa);
+        const membro = await buscarMembro(session.user.id);
+        setIdEmpresa(membro.idEmpresa);
+        setCompanyName(membro.companyName);
+        setMemberName(membro.memberName);
+        setMemberRole(membro.memberRole);
       } else {
         setIdEmpresa(null);
+        setCompanyName(null);
+        setMemberName(null);
+        setMemberRole(null);
       }
 
       setLoading(false);
@@ -69,10 +114,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(session?.user ?? null);
 
         if (session?.user?.id) {
-          const empresa = await buscarIdEmpresa(session.user.id);
-          setIdEmpresa(empresa);
+          const membro = await buscarMembro(session.user.id);
+          setIdEmpresa(membro.idEmpresa);
+          setCompanyName(membro.companyName);
+          setMemberName(membro.memberName);
+          setMemberRole(membro.memberRole);
         } else {
           setIdEmpresa(null);
+          setCompanyName(null);
+          setMemberName(null);
+          setMemberRole(null);
         }
 
         setLoading(false);
@@ -125,9 +176,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     if (!isSupabaseConfigured) return;
     await supabase.auth.signOut();
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('sortTooltipDismissed');
-    }
   };
 
   const value = {
@@ -135,6 +183,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     session,
     loading,
     idEmpresa,
+    companyName,
+    memberName,
+    memberRole,
     signIn,
     signUp,
     signOut,

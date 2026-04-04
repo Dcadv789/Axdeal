@@ -9,6 +9,7 @@ interface ProfileMenuProps {
   onNavigate: (page: PageType) => void;
   onNavigateWithTab?: (page: PageType, tab?: ConfigTab) => void;
   anchorPosition?: { top: number; left: number } | null;
+  portalId?: string;
 }
 
 const PROFILE_MENU_ITEMS = [
@@ -16,7 +17,15 @@ const PROFILE_MENU_ITEMS = [
   { id: 'logout', label: 'Sair', icon: LogOut },
 ];
 
-export default function ProfileMenu({ isOpen, onClose, isCollapsed, onNavigate, onNavigateWithTab, anchorPosition }: ProfileMenuProps) {
+export default function ProfileMenu({
+  isOpen,
+  onClose,
+  isCollapsed,
+  onNavigate,
+  onNavigateWithTab,
+  anchorPosition,
+  portalId = 'profile-menu-portal',
+}: ProfileMenuProps) {
   const { signOut } = useAuth();
 
   if (!isOpen || isCollapsed || !anchorPosition) return null;
@@ -40,7 +49,7 @@ export default function ProfileMenu({ isOpen, onClose, isCollapsed, onNavigate, 
 
   return (
     <div
-      id="profile-menu-portal"
+      id={portalId}
       className="fixed w-56 bg-white dark:bg-black rounded-lg shadow-xl border border-[#E5E7EB] dark:border-[#262626] z-[99999]"
       style={style}
     >

@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import {
   Home,
   Briefcase,
   DollarSign,
+  BarChart3,
   Users,
   Settings,
   Moon,
@@ -16,13 +17,11 @@ import {
   Filter,
   Building2,
   ChevronDown,
-  PanelLeft,
   PanelLeftClose,
 } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useCompany } from '@/lib/context/company-context';
 import SidebarLogo from '@/components/ui/Sidebar/SidebarLogo';
-import CreateButton from '@/components/ui/Sidebar/CreateButton';
 import FooterCopyright from '@/components/ui/FooterCopyright';
 import { PageType, ConfigTab } from '@/types';
 
@@ -56,7 +55,9 @@ const ERP_ITEMS: SidebarItem[] = [
   { id: 'erp_dashboard', label: 'Início', icon: Home, path: '/erp/dashboard' },
   { id: 'erp_negocios', label: 'Negócios', icon: Briefcase, path: '/erp/negocios' },
   { id: 'erp_financeiro', label: 'Financeiro', icon: DollarSign, path: '/erp/financeiro' },
-  { id: 'erp_clientes', label: 'Clientes', icon: Users, path: '/erp/clientes' },
+  { id: 'erp_resultados', label: 'Resultados', icon: BarChart3, path: '/erp/resultados' },
+  { id: 'erp_contatos', label: 'Cadastros', icon: Users, path: '/erp/cadastros/contatos' },
+  { id: 'erp_configuracoes', label: 'Configurações', icon: Settings, path: '/erp/configuracoes' },
 ];
 
 const CRM_ITEMS: SidebarItem[] = [
@@ -67,7 +68,7 @@ const CRM_ITEMS: SidebarItem[] = [
 ];
 
 const SYSTEM_ITEMS: SidebarItem[] = [
-  { id: 'config', label: 'Configurações', icon: Settings, path: '/erp/configuracoes' },
+  { id: 'config', label: 'Configurações', icon: Settings, path: '/sys/configuracao' },
   { id: 'support', label: 'Suporte', icon: HelpCircle, path: '/erp/suporte' },
   { id: 'dark', label: 'Modo Escuro', icon: Moon },
 ];
@@ -91,13 +92,13 @@ function CompanySelector() {
         className="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
       >
         <div className="flex items-center gap-2 min-w-0">
-          <Building2 size={14} className="text-amber-600 dark:text-amber-400 flex-shrink-0" />
+          <Building2 size={16} className="text-amber-600 dark:text-amber-400 flex-shrink-0" />
           <span className="text-xs font-medium text-amber-800 dark:text-amber-300 truncate">
             {companyName ?? 'Selecionar empresa'}
           </span>
         </div>
         <ChevronDown
-          size={14}
+          size={16}
           className={`text-amber-600 dark:text-amber-400 flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`}
         />
       </button>
@@ -134,6 +135,10 @@ function SectionBlock({
   isCollapsed,
   onItemClick,
   sectionKey,
+  showCollapsedToggle,
+  onToggleCollapse,
+  showExpandedCollapseControl,
+  onExpandedCollapse,
 }: {
   title: string;
   items: SidebarItem[];
@@ -142,15 +147,50 @@ function SectionBlock({
   isCollapsed: boolean;
   onItemClick: (sectionKey: string, id: string, path?: string) => void;
   sectionKey: string;
+  showCollapsedToggle?: boolean;
+  onToggleCollapse?: () => void;
+  showExpandedCollapseControl?: boolean;
+  onExpandedCollapse?: () => void;
 }) {
+  const hasCollapsedToggle = isCollapsed && showCollapsedToggle && onToggleCollapse;
+  const sectionOffsetClass = sectionKey === 'erp' || sectionKey === 'crm' ? 'pt-[14px]' : '';
+  const expandedTitleSlotClass =
+    sectionKey === 'crm' ? 'h-[30px] mb-1' : sectionKey === 'erp' ? 'h-[54px] mb-1' : 'h-[60px] mb-3';
+  const titleSlotClass = expandedTitleSlotClass;
+  const expandedTitleTopClass =
+    sectionKey === 'erp' ? 'top-[30px]' : sectionKey === 'crm' ? 'top-[8px]' : 'top-[34px]';
+  const titlePositionClass = expandedTitleTopClass;
+
   return (
-    <div className="px-3 pt-1 flex flex-col">
-      <div
-        className={`${
-          isCollapsed ? 'opacity-0 h-0 mb-0' : 'opacity-100 h-auto'
-        } text-[10px] font-semibold text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider px-3 transition-all duration-300 overflow-hidden`}
-      >
-        {title}
+    <div className={`px-3 flex flex-col ${sectionOffsetClass}`}>
+      <div className={`relative overflow-hidden ${titleSlotClass}`}>
+        {hasCollapsedToggle && (
+          <button
+            onClick={onToggleCollapse}
+            className="absolute left-1/2 top-[2px] z-10 inline-flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-colors duration-200 hover:bg-slate-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-slate-300 dark:hover:bg-neutral-800"
+            title="Expandir menu"
+          >
+            <PanelLeftClose size={20} className="rotate-180" />
+          </button>
+        )}
+        {!isCollapsed && showExpandedCollapseControl && onExpandedCollapse && (
+          <button
+            type="button"
+            onClick={onExpandedCollapse}
+            className="absolute right-0 top-[2px] inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-colors duration-200 hover:bg-slate-50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-slate-300 dark:hover:bg-neutral-800"
+            title="Recolher menu"
+            aria-label="Recolher menu lateral principal"
+          >
+            <PanelLeftClose size={20} />
+          </button>
+        )}
+        <span
+          className={`pointer-events-none absolute left-0 right-0 h-4 leading-4 pl-3 text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap transition-opacity duration-200 ${titlePositionClass} ${
+            isCollapsed ? 'opacity-0' : 'opacity-100'
+          }`}
+        >
+          {title}
+        </span>
       </div>
       <nav className="space-y-1">
         {items.map((item) => {
@@ -163,26 +203,26 @@ function SectionBlock({
             <button
               key={item.id}
               onClick={() => onItemClick(sectionKey, item.id, item.path)}
-              className={`w-full flex items-center ${
-                isCollapsed ? 'justify-center' : 'gap-3'
-              } px-3 py-2.5 rounded-lg font-medium transition-colors duration-200 ${
+              className={`relative w-full overflow-hidden rounded-lg px-3 py-2.5 text-left font-medium transition-colors duration-200 ${
                 isActive
                   ? 'text-white bg-blue-600 dark:bg-blue-600'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10'
               }`}
               title={isCollapsed ? item.label : undefined}
             >
-              <Icon
-                size={20}
-                className={`flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`}
-              />
-              <span
-                className={`${
-                  isCollapsed ? 'opacity-0 w-0 hidden' : 'opacity-100 w-auto'
-                } text-xs whitespace-nowrap transition-all duration-300`}
-              >
-                {item.label}
-              </span>
+              <div className="relative flex h-6 items-center justify-start">
+                <Icon
+                  size={22}
+                  className={`shrink-0 ${isActive ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`}
+                />
+                <span
+                  className={`pointer-events-none absolute left-8 overflow-hidden whitespace-nowrap text-xs transition-[max-width,opacity] duration-200 ease-out ${
+                    isCollapsed ? 'max-w-0 opacity-0' : 'max-w-[140px] opacity-100'
+                  }`}
+                >
+                  {item.label}
+                </span>
+              </div>
             </button>
           );
         })}
@@ -202,12 +242,18 @@ export default function DynamicSidebar({
   const { isDark, toggleTheme } = useTheme();
   const { isSuperAdmin } = useCompany();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
+
+  const podeNavegar = (path: string): boolean => {
+    if (typeof window === 'undefined') return true;
+    const guard = (window as Window & { __AXORY_NAV_GUARD__?: (nextPath: string) => boolean }).__AXORY_NAV_GUARD__;
+    if (typeof guard !== 'function') return true;
+    return guard(path);
+  };
 
   const sections: SidebarSection[] = [
     {
       key: 'erp',
-      title: 'Financeiro (ERP)',
+      title: 'ERP',
       items: ERP_ITEMS,
       visible: permissions.erp,
     },
@@ -221,6 +267,7 @@ export default function DynamicSidebar({
 
   const handleItemClick = (sectionKey: string, id: string, path?: string) => {
     if ((sectionKey === 'crm' || sectionKey === 'erp') && path) {
+      if (!podeNavegar(path)) return;
       router.push(path);
       return;
     }
@@ -231,6 +278,7 @@ export default function DynamicSidebar({
     if (id === 'dark') {
       toggleTheme();
     } else if (path) {
+      if (!podeNavegar(path)) return;
       router.push(path);
     }
   };
@@ -244,42 +292,18 @@ export default function DynamicSidebar({
   return (
     <div
       className={`${
-        isCollapsed ? 'w-[88px]' : 'w-64'
-      } bg-white dark:bg-black border-r border-[#E5E7EB] dark:border-[#262626] flex flex-col h-screen transition-all duration-300 relative z-10`}
+        isCollapsed ? 'w-[70px]' : 'w-64'
+      } bg-white dark:bg-black border-r border-[#E5E7EB] dark:border-[#262626] flex flex-col h-screen overflow-x-hidden transition-all duration-300 relative z-10`}
     >
       <SidebarLogo
         isCollapsed={isCollapsed}
         isDark={isDark}
-        onToggleCollapse={!isCollapsed ? () => setIsCollapsed(!isCollapsed) : undefined}
+        onToggleCollapse={undefined}
       />
 
-      {/* Collapse toggle - quando colapsado: sozinho e centralizado */}
-      {isCollapsed && (
-        <div className="px-3 py-2 flex justify-center">
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
-            title="Expandir menu"
-          >
-            <PanelLeft size={18} className="text-gray-500 dark:text-gray-400" />
-          </button>
-        </div>
-      )}
+      {isSuperAdmin && (isCollapsed ? <div className="mx-3 mb-3 h-10" /> : <CompanySelector />)}
 
-      {/* Botão Novo - largura total quando expandido, mais margem em cima */}
-      <div className={`${isCollapsed ? 'p-2 pb-4' : 'px-3 pt-4 pb-4'}`}>
-        <CreateButton
-          isCollapsed={isCollapsed}
-          isMenuOpen={isCreateMenuOpen}
-          onToggleMenu={setIsCreateMenuOpen}
-        />
-      </div>
-
-      {/* Super Admin company selector */}
-      {isSuperAdmin && !isCollapsed && <CompanySelector />}
-
-      {/* Module sections - Financeiro e Marketing */}
-      <div className="flex-1 overflow-y-auto space-y-4">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-4">
         {sections
           .filter((s) => s.visible)
           .map((section) => (
@@ -292,11 +316,14 @@ export default function DynamicSidebar({
               pathname={pathname}
               isCollapsed={isCollapsed}
               onItemClick={handleItemClick}
+              showCollapsedToggle={section.key === 'erp'}
+              onToggleCollapse={() => setIsCollapsed(false)}
+              showExpandedCollapseControl={section.key === 'erp'}
+              onExpandedCollapse={() => setIsCollapsed(true)}
             />
           ))}
       </div>
 
-      {/* System section - pb-4 para espaçamento igual ao dos botões de navegação */}
       <div className="flex flex-col pb-4">
         <SectionBlock
           sectionKey="system"
@@ -309,7 +336,10 @@ export default function DynamicSidebar({
         />
       </div>
 
-      <div className="pt-4 px-3 pb-4 mt-auto">
+      <div className="px-3 mt-auto">
+        <div className="h-px w-full bg-gray-200/90 dark:bg-neutral-800/90" />
+      </div>
+      <div className="pt-4 px-3 pb-4">
         <FooterCopyright variant={isCollapsed ? 'sidebarCollapsed' : 'sidebar'} />
       </div>
     </div>
