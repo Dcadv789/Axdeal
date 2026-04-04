@@ -173,15 +173,14 @@ export function useReguaCobranca() {
 }
 
 function normalizarRegua(row: Record<string, unknown>): ReguaCobranca {
-  let etapas = (row.etapas as Notificacao[]) || [];
-  if (!Array.isArray(etapas)) etapas = [];
+  const etapas = Array.isArray(row.etapas) ? (row.etapas as Array<Record<string, unknown>>) : [];
   return {
     id: String(row.id),
     id_empresa: String(row.id_empresa),
     nome: String(row.nome || ''),
     descricao: row.descricao ? String(row.descricao) : null,
     padrao: Boolean(row.padrao),
-    etapas: etapas.map((e: Record<string, unknown>, index: number) => ({
+    etapas: etapas.map((e, index: number) => ({
       numero: index + 1,
       offset: Number(e.offset) || 0,
       unit: (e.unit as 'dias' | 'meses') || 'dias',

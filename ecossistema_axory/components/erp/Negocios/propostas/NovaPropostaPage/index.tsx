@@ -664,7 +664,7 @@ export default function NovaPropostaPage({
 
     if (erroBuscaConfig) throw erroBuscaConfig;
 
-    const valorAtual = Number(configAtual?.[colunaProximoNumero] || 0);
+    const valorAtual = Number(((configAtual as Record<string, unknown> | null)?.[colunaProximoNumero] as number | string | undefined) || 0);
     if (proximoNumero <= valorAtual) return;
 
     const { error: erroAtualizarConfig } = await supabase

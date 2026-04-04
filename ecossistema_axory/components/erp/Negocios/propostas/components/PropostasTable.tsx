@@ -261,24 +261,29 @@ export default function PropostasTable({
       setHasParcelasMap({});
       return;
     }
-    const ids = propostas.map((p) => p.id);
-    const column = isPedidosVenda ? 'id_pedido_venda' : 'id_os';
-    supabase
-      .from('erp_parcelas')
-      .select(column)
-      .eq('id_empresa', companyId)
-      .in(column, ids)
-      .then(({ data }) => {
-        const idsComParcelas = new Set(
-          (data || []).map((r) => (r as Record<string, string>)[column]).filter(Boolean)
-        );
+
+    const carregarParcelasRelacionadas = async () => {
+      try {
+        const ids = propostas.map((p) => p.id);
+        const column = isPedidosVenda ? 'id_pedido_venda' : 'id_os';
+        const { data } = await supabase
+          .from('erp_parcelas')
+          .select(column)
+          .eq('id_empresa', companyId)
+          .in(column, ids);
+
+        const idsComParcelas = new Set((data || []).map((r) => (r as Record<string, string>)[column]).filter(Boolean));
         const map: Record<string, boolean> = {};
         propostas.forEach((p) => {
           map[p.id] = idsComParcelas.has(p.id);
         });
         setHasParcelasMap(map);
-      })
-      .catch(() => setHasParcelasMap({}));
+      } catch {
+        setHasParcelasMap({});
+      }
+    };
+
+    void carregarParcelasRelacionadas();
   }, [mostraAcaoFinanceira, companyId, isPedidosVenda, propostas]);
 
   const handleMenuClick = (propostaId: string) => {

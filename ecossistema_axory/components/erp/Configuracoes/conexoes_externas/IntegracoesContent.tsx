@@ -13,6 +13,9 @@ const INTEGRACOES_TABS = [
 
 export default function IntegracoesContent() {
   const [activeTab, setActiveTab] = useState<IntegracoesTab>('crm');
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId as IntegracoesTab);
+  };
 
   return (
     <ConfigSectionLayout
@@ -21,7 +24,7 @@ export default function IntegracoesContent() {
       description="Conecte e configure módulos externos e automações."
       tabs={INTEGRACOES_TABS}
       activeTab={activeTab}
-      onTabChange={setActiveTab}
+      onTabChange={handleTabChange}
       showHeader={false}
     >
       {activeTab === 'crm' && (

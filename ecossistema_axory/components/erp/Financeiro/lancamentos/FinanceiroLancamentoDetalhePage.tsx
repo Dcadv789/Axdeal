@@ -669,6 +669,8 @@ export default function FinanceiroLancamentoDetalhePage({ lancamentoId, origem }
     const dataRef = draft.dataPagamento
       ? new Date(`${draft.dataPagamento}T00:00:00`).toISOString()
       : new Date().toISOString();
+    const tipoMov = origem === 'receber' ? 'entrada' : 'saida';
+    const novoStatus = 'PAGO';
 
     const { error } = await supabase.rpc('erp_rpc_baixar_parcela_universal', {
       p_id_parcela: draft.parcela.id,

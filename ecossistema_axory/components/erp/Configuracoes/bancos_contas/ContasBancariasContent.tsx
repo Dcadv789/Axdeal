@@ -13,6 +13,9 @@ const CONTAS_TABS = [
 
 export default function ContasBancariasContent() {
   const [activeTab, setActiveTab] = useState<ContasBancariasTab>('contas');
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId as ContasBancariasTab);
+  };
 
   return (
     <ConfigSectionLayout
@@ -21,7 +24,7 @@ export default function ContasBancariasContent() {
       description="Gerencie as contas bancárias e caixas da empresa."
       tabs={CONTAS_TABS}
       activeTab={activeTab}
-      onTabChange={setActiveTab}
+      onTabChange={handleTabChange}
       showHeader={false}
       wrapInCard={false}
     >

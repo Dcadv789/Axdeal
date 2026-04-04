@@ -629,7 +629,7 @@ export default function CondicoesComerciais({
                       <select
                         value={parcela.idFormaPagamento || ''}
                         onChange={(e) => {
-                          const idSelecionado = e.target.value || null;
+                          const idSelecionado = e.target.value || '';
                           const nomeSelecionado = idSelecionado ? formasPagamentoPorId.get(idSelecionado) || '' : '';
                           atualizarParcela(parcela.id, 'idFormaPagamento', idSelecionado);
                           atualizarParcela(parcela.id, 'formaPagamento', nomeSelecionado);

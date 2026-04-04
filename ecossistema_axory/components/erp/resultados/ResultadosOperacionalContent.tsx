@@ -139,7 +139,7 @@ export default function ResultadosOperacionalContent() {
                       <Cell key={item.name} fill={STATUS_CHART_COLORS[index % STATUS_CHART_COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value: number) => `${value} OS`} />
+                  <Tooltip formatter={(value) => `${Number(value || 0)} OS`} />
                   <Legend verticalAlign="bottom" iconType="circle" />
                 </RechartsPieChart>
               </ResponsiveContainer>

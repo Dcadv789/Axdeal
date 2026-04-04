@@ -310,7 +310,7 @@ export default function ResultadosFinanceirosContent() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
                   <XAxis dataKey="mes" stroke="#64748B" />
                   <YAxis stroke="#64748B" tickFormatter={(value) => `R$ ${Math.round(value / 1000)}k`} />
-                  <Tooltip formatter={(value: number) => formatCurrency(Number(value || 0))} />
+                  <Tooltip formatter={(value) => formatCurrency(Number(value || 0))} />
                   <Legend />
                   <Area type="monotone" dataKey="entradas" name="Entradas" stroke="#16A34A" fill="#BBF7D0" fillOpacity={0.65} />
                   <Area type="monotone" dataKey="saidas" name="Saidas" stroke="#DC2626" fill="#FECACA" fillOpacity={0.65} />

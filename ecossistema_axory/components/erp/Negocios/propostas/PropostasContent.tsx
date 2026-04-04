@@ -717,7 +717,7 @@ export default function PropostasContent({
               data_fim: os.data_fim,
               id_cliente: os.id_contato,
               id_usuario_responsavel: os.id_usuario_responsavel,
-              observacoes_impressas: null,
+              observacoes_impressas: undefined,
               id_proposta_origem: os.id_proposta_origem,
               estoque_lancado: Boolean(os.estoque_lancado),
               conta_lancada: idsComContaLancadaOS.has(os.id),

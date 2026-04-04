@@ -361,9 +361,8 @@ export default function TaxasCartaoPage() {
       const existingRow = existingGroupRows.find((row) => row.parcela === item.parcelas);
       return {
         id: existingRow?.id ?? '',
-        padrao: item.padrao,
-        parcela: item.parcelas,
         ...item,
+        parcela: item.parcelas,
       };
     });
 

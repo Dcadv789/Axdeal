@@ -276,7 +276,7 @@ export default function ResultadosDepartamentosContent() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
                 <XAxis dataKey="nome" stroke="#64748B" />
                 <YAxis stroke="#64748B" tickFormatter={(value) => `R$ ${Math.round(value / 1000)}k`} />
-                <Tooltip formatter={(value: number) => formatCurrency(Number(value || 0))} />
+                <Tooltip formatter={(value) => formatCurrency(Number(value || 0))} />
                 <Legend />
                 <Bar dataKey="orcado" name="Orcado" fill="#93C5FD" radius={[8, 8, 0, 0]} />
                 <Bar dataKey="realizado" name="Realizado" fill="#2563EB" radius={[8, 8, 0, 0]} />
