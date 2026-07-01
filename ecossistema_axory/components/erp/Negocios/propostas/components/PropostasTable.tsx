@@ -17,6 +17,8 @@ import {
   Loader2,
   Check,
   X,
+  FileText,
+  Eye,
 } from 'lucide-react';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -33,6 +35,7 @@ interface Proposta {
   introducao?: string;
   estoque_lancado?: boolean | null;
   conta_lancada?: boolean | null;
+  id_cliente?: string | null;
 }
 
 type SortColumn = 'codigo' | 'cliente_nome' | 'status' | 'valor_total_final' | 'data' | null;
@@ -61,6 +64,7 @@ interface PropostasTableProps {
   onAprovarProposta?: (id: string) => void;
   onAlterarStatus?: (proposta: Proposta) => void;
   onAcaoEstoque?: (proposta: Proposta, tableType: 'pedidos_venda' | 'ordens_servico') => void;
+  onVerCliente?: (clienteId: string) => void;
   permiteEdicaoStatus?: boolean;
   visibleColumns?: Record<NegociosTableColumnKey, boolean>;
 }
@@ -83,6 +87,7 @@ export default function PropostasTable({
   onAprovarProposta,
   onAlterarStatus,
   onAcaoEstoque,
+  onVerCliente,
   permiteEdicaoStatus = false,
   visibleColumns,
 }: PropostasTableProps) {
@@ -334,6 +339,20 @@ export default function PropostasTable({
   };
   const selectedDocForMenu = openMenu ? propostas.find((p) => p.id === openMenu) : null;
 
+  const handleGerarPdf = useCallback((documentoId: string | null) => {
+    if (!documentoId || typeof window === 'undefined') return;
+
+    const tipoPath =
+      resolvedTableType === 'pedidos_venda'
+        ? 'pedido-venda'
+        : resolvedTableType === 'ordens_servico'
+          ? 'ordem-servico'
+          : 'proposta';
+
+    window.open(`/pdf/${tipoPath}/${documentoId}`, '_blank', 'noopener,noreferrer');
+    setOpenMenu(null);
+  }, [resolvedTableType]);
+
   if (propostas.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500 dark:text-gray-400">
@@ -512,6 +531,19 @@ export default function PropostasTable({
           }}
           className="w-56 bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl"
         >
+          {onVerCliente && openMenu && selectedDocForMenu?.id_cliente && (
+            <button
+              type="button"
+              onClick={() => {
+                onVerCliente(selectedDocForMenu.id_cliente!);
+                setOpenMenu(null);
+              }}
+              className="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-3 transition-colors whitespace-nowrap rounded-t-lg"
+            >
+              <Eye size={16} className="text-blue-500 dark:text-blue-400 flex-shrink-0" />
+              <span>Ver Cliente</span>
+            </button>
+          )}
           {mostraAcaoFinanceira && openMenu && hasParcelasMap[openMenu] !== undefined && (
             <button
               onClick={() => handleLancarOuEstornarContas(openMenu)}
@@ -550,6 +582,13 @@ export default function PropostasTable({
               <span>{selectedDocForMenu.estoque_lancado ? 'Estornar Estoque' : 'Lançar Estoque'}</span>
             </button>
           )}
+          <button
+            onClick={() => handleGerarPdf(openMenu)}
+            className="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 flex items-center gap-3 transition-colors border-t border-gray-200 dark:border-gray-700 whitespace-nowrap"
+          >
+            <FileText size={16} className="text-blue-600 dark:text-blue-400 flex-shrink-0" />
+            <span>Gerar PDF</span>
+          </button>
           <button
             onClick={() => {
               if (openMenu && onCopiarProposta) {

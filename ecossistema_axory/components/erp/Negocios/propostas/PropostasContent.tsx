@@ -17,6 +17,7 @@ import ModalAlterarStatusProposta from './components/ModalAlterarStatusProposta'
 import ModalConfirmarExclusao from './components/ModalConfirmarExclusao';
 import ModalConfirmarMovimentoEstoque from './components/ModalConfirmarMovimentoEstoque';
 import ColumnVisibilityDropdown from '@/components/ui/ColumnVisibilityDropdown';
+import ClienteDrawer from '@/components/erp/Negocios/shared/ClienteDrawer';
 
 export type NegociosTab = 'propostas' | 'pedidos_venda' | 'ordens_servico';
 
@@ -274,6 +275,8 @@ export default function PropostasContent({
     operacao: 'LANCAR' | 'ESTORNAR';
   } | null>(null);
   const [executandoMovimentoEstoque, setExecutandoMovimentoEstoque] = useState(false);
+  const [clienteDrawerAberto, setClienteDrawerAberto] = useState(false);
+  const [clienteDrawerClienteId, setClienteDrawerClienteId] = useState<string | null>(null);
   const colunasStorageKey = useMemo(
     () => `erp.negocios.colunas.${user?.id || companyId || 'default'}`,
     [user?.id, companyId]
@@ -920,6 +923,7 @@ export default function PropostasContent({
           introducao: v.observacoes_impressas,
           estoque_lancado: v.estoque_lancado,
           conta_lancada: v.conta_lancada,
+          id_cliente: v.id_cliente,
         }))}
         sortColumn={sortColumn}
         sortDirection={sortDirection}
@@ -939,6 +943,7 @@ export default function PropostasContent({
             operacao: p.estoque_lancado ? 'ESTORNAR' : 'LANCAR',
           })
         }
+        onVerCliente={(clienteId) => { setClienteDrawerClienteId(clienteId); setClienteDrawerAberto(true); }}
         permiteEdicaoStatus
         visibleColumns={visibleColumnsByTab[tableType]}
       />
@@ -1216,6 +1221,7 @@ export default function PropostasContent({
               onExcluirDocumento={(p) => handleSolicitarExclusao(p, 'proposta')}
               onAprovarProposta={handleAprovarProposta}
               onAlterarStatus={(p) => setPropostaParaAlterarStatus(p)}
+              onVerCliente={(clienteId) => { setClienteDrawerClienteId(clienteId); setClienteDrawerAberto(true); }}
               permiteEdicaoStatus
               visibleColumns={visibleColumnsByTab.propostas}
             />
@@ -1289,6 +1295,11 @@ export default function PropostasContent({
         loading={executandoMovimentoEstoque}
         onClose={() => !executandoMovimentoEstoque && setMovimentoEstoquePendente(null)}
         onConfirm={confirmarMovimentoEstoque}
+      />
+      <ClienteDrawer
+        isOpen={clienteDrawerAberto}
+        onClose={() => { setClienteDrawerAberto(false); setClienteDrawerClienteId(null); }}
+        clienteId={clienteDrawerClienteId}
       />
     </div>
   );

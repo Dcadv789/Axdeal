@@ -9,6 +9,7 @@ import SearchBar from '@/components/erp/Negocios/propostas/components/SearchBar'
 import DateRangePicker from '@/components/erp/Negocios/propostas/components/DateRangePicker';
 import MultiSelectDropdown from '@/components/erp/Negocios/propostas/components/MultiSelectDropdown';
 import ColumnVisibilityDropdown from '@/components/ui/ColumnVisibilityDropdown';
+import ClienteDrawer from '@/components/erp/Negocios/shared/ClienteDrawer';
 import NegociosContratosTable, {
   type ContratoListItem,
   type ContratosColumnKey,
@@ -92,6 +93,8 @@ export default function NegociosContratosContent() {
   const [sortColumn, setSortColumn] = useState<ContratosSortColumn>(null);
   const [sortDirection, setSortDirection] = useState<ContratosSortDirection>(null);
   const [visibleColumns, setVisibleColumns] = useState<Record<ContratosColumnKey, boolean>>(defaultColumns());
+  const [clienteDrawerAberto, setClienteDrawerAberto] = useState(false);
+  const [clienteDrawerClienteId, setClienteDrawerClienteId] = useState<string | null>(null);
 
   useEffect(() => {
     const carregar = async () => {
@@ -141,6 +144,7 @@ export default function NegociosContratosContent() {
           data_inicio: String(item.data_inicio || ''),
           proximo_faturamento: item.proximo_faturamento ? String(item.proximo_faturamento) : null,
           status: item.status === 'cancelado' ? 'cancelado' : 'ativo',
+          id_cliente: idCliente || null,
         } satisfies ContratoListItem;
       });
 
@@ -367,9 +371,15 @@ export default function NegociosContratosContent() {
           sortDirection={sortDirection}
           onSort={handleSort}
           onEditar={(id) => router.push(`/erp/negocios/contratos/${id}/editar`)}
+          onVerCliente={(clienteId) => { setClienteDrawerClienteId(clienteId); setClienteDrawerAberto(true); }}
           visibleColumns={visibleColumns}
         />
       )}
+      <ClienteDrawer
+        isOpen={clienteDrawerAberto}
+        onClose={() => { setClienteDrawerAberto(false); setClienteDrawerClienteId(null); }}
+        clienteId={clienteDrawerClienteId}
+      />
     </div>
   );
 }

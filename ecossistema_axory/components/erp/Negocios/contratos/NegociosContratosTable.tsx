@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowDown, ArrowUp, ArrowUpDown, MoreVertical, Pencil } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown, Eye, FileText, MoreVertical, Pencil } from 'lucide-react';
 
 export interface ContratoListItem {
   id: string;
@@ -11,6 +11,7 @@ export interface ContratoListItem {
   data_inicio: string;
   proximo_faturamento: string | null;
   status: 'ativo' | 'cancelado';
+  id_cliente?: string | null;
 }
 
 export type ContratosSortColumn =
@@ -40,6 +41,7 @@ interface NegociosContratosTableProps {
   sortDirection: ContratosSortDirection;
   onSort: (column: ContratosSortColumn) => void;
   onEditar: (id: string) => void;
+  onVerCliente?: (clienteId: string) => void;
   visibleColumns: Record<ContratosColumnKey, boolean>;
 }
 
@@ -64,6 +66,7 @@ export default function NegociosContratosTable({
   sortDirection,
   onSort,
   onEditar,
+  onVerCliente,
   visibleColumns,
 }: NegociosContratosTableProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -366,6 +369,33 @@ export default function NegociosContratosTable({
           }}
           className="w-48 rounded-lg border border-gray-200 bg-gray-50 shadow-xl dark:border-gray-700 dark:bg-neutral-800"
         >
+          {onVerCliente && openMenu && contratos.find((c) => c.id === openMenu)?.id_cliente && (
+            <button
+              type="button"
+              onClick={() => {
+                const clienteId = contratos.find((c) => c.id === openMenu)?.id_cliente;
+                if (clienteId) onVerCliente(clienteId);
+                setOpenMenu(null);
+              }}
+              className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-neutral-700 rounded-t-lg"
+            >
+              <Eye size={15} className="text-blue-500 dark:text-blue-400 flex-shrink-0" />
+              Ver Cliente
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                window.open(`/pdf/contrato/${openMenu}`, '_blank', 'noopener,noreferrer');
+              }
+              setOpenMenu(null);
+            }}
+            className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-neutral-700"
+          >
+            <FileText size={15} />
+            Gerar PDF
+          </button>
           <button
             type="button"
             onClick={() => {
