@@ -1378,7 +1378,6 @@ export default function NovaPropostaPage({
           setClienteDrawerAberto(true);
           setMenuAcoesAberto(false);
         },
-        disabled: !clientes.clienteSelecionado?.id,
         variant: 'outline',
       } satisfies DocumentoAction,
       ...((tipo === 'proposta' || tipo === 'venda' || tipo === 'os')
@@ -1434,7 +1433,7 @@ export default function NovaPropostaPage({
         variant: 'outline',
       },
     ],
-    [documentoTemId, clientes.clienteSelecionado?.id, handleAprovarManual, handleCopiarDocumento, handleCopiarLink, handleEnviarEmail, handleEnviarWhatsApp, handleExcluirDocumento, tipo]
+    [documentoTemId, handleAprovarManual, handleCopiarDocumento, handleCopiarLink, handleEnviarEmail, handleEnviarWhatsApp, handleExcluirDocumento, tipo]
   );
 
   return (

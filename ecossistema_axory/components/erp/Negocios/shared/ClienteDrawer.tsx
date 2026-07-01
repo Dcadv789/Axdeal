@@ -206,6 +206,10 @@ export default function ClienteDrawer({ isOpen, onClose, clienteId }: ClienteDra
             <div className="flex items-center justify-center py-16 text-slate-400">
               <Loader2 size={24} className="animate-spin" />
             </div>
+          ) : !clienteId ? (
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-slate-400">
+              Nenhum cliente vinculado a este documento.
+            </div>
           ) : !cliente ? (
             <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-300">
               Não foi possível carregar os dados do cliente.
