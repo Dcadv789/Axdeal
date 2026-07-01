@@ -8,6 +8,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import SubSidebarLayout from '@/components/ui/navigation/SubSidebarLayout';
 import NovaPropostaPage from './NovaPropostaPage';
 import { NEGOCIOS_SUBSIDEBAR_ITEMS, getNegociosRouteByMenuId, type NegociosSidebarMenuId } from './navigation';
+import { invalidateNegociosCache } from '@/components/erp/Negocios/propostas/PropostasContent';
 
 type DocumentoTipo = 'proposta' | 'venda' | 'os';
 
@@ -60,6 +61,11 @@ export default function DocumentoDetalhePage({ mode, tipo = 'proposta' }: Docume
     window.localStorage.setItem(collapseStorageKey, isSubSidebarCollapsed ? '1' : '0');
   }, [isSubSidebarCollapsed]);
 
+  const handleVoltar = () => {
+    invalidateNegociosCache();
+    router.push(voltarHref);
+  };
+
   const renderConteudo = () => {
     if (!documentoId) {
       return (
@@ -74,14 +80,14 @@ export default function DocumentoDetalhePage({ mode, tipo = 'proposta' }: Docume
     }
 
     if (tipo === 'venda') {
-      return <NovaPropostaPage onBack={() => router.push(voltarHref)} mode={mode} vendaId={documentoId} tipo="venda" />;
+      return <NovaPropostaPage onBack={handleVoltar} mode={mode} vendaId={documentoId} tipo="venda" />;
     }
 
     if (tipo === 'os') {
-      return <NovaPropostaPage onBack={() => router.push(voltarHref)} mode={mode} osId={documentoId} tipo="os" />;
+      return <NovaPropostaPage onBack={handleVoltar} mode={mode} osId={documentoId} tipo="os" />;
     }
 
-    return <NovaPropostaPage onBack={() => router.push(voltarHref)} mode={mode} propostaId={documentoId} tipo="proposta" />;
+    return <NovaPropostaPage onBack={handleVoltar} mode={mode} propostaId={documentoId} tipo="proposta" />;
   };
 
   return (

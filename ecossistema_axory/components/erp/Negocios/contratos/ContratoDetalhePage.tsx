@@ -8,6 +8,7 @@ import {
   CalendarDays,
   ChevronDown,
   CreditCard,
+  Eye,
   FileText,
   Loader2,
   ReceiptText,
@@ -15,6 +16,7 @@ import {
   Trash2,
   User,
 } from 'lucide-react';
+import ClienteDrawer from '@/components/erp/Negocios/shared/ClienteDrawer';
 import { supabase } from '@/lib/supabase';
 import { useCompany } from '@/lib/context/company-context';
 import { toast } from 'sonner';
@@ -211,6 +213,7 @@ export default function ContratoDetalhePage({ contratoId = null, mode = 'new' }:
   const [clienteDropdownAberto, setClienteDropdownAberto] = useState(false);
   const [categoriaDropdownAberto, setCategoriaDropdownAberto] = useState(false);
   const [menuAcoesAberto, setMenuAcoesAberto] = useState(false);
+  const [clienteDrawerAberto, setClienteDrawerAberto] = useState(false);
   const [gerandoParcelas, setGerandoParcelas] = useState(false);
   const [quantidadeParcelasFuturas, setQuantidadeParcelasFuturas] = useState('1');
   const menuAcoesRef = useRef<HTMLDivElement | null>(null);
@@ -944,6 +947,18 @@ export default function ContratoDetalhePage({ contratoId = null, mode = 'new' }:
               {menuAcoesAberto && (
                 <div className="absolute right-0 top-full z-[9999] mt-2 min-w-[220px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl dark:border-neutral-800 dark:bg-neutral-900">
                   <div className="p-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuAcoesAberto(false);
+                        setClienteDrawerAberto(true);
+                      }}
+                      disabled={!form.idCliente}
+                      className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 dark:text-slate-200 dark:hover:bg-neutral-800"
+                    >
+                      <Eye size={15} className="text-slate-400 dark:text-slate-500" />
+                      Ver Cliente
+                    </button>
                     <button
                       type="button"
                       onClick={() => {
@@ -1706,6 +1721,11 @@ export default function ContratoDetalhePage({ contratoId = null, mode = 'new' }:
           </button>
         </div>
       </div>
+      <ClienteDrawer
+        isOpen={clienteDrawerAberto}
+        onClose={() => setClienteDrawerAberto(false)}
+        clienteId={form.idCliente || null}
+      />
     </div>
   );
 }

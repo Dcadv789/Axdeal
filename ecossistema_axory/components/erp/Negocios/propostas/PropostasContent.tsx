@@ -110,6 +110,10 @@ let negociosCache: {
   ordensServico: [],
 };
 
+export function invalidateNegociosCache() {
+  negociosCache.hydrated = false;
+}
+
 function filtrarEOrdenarNegocios<T extends { codigo: string; cliente_nome: string; status: string; valor_total_final: number }>(
   lista: T[],
   searchTerm: string,

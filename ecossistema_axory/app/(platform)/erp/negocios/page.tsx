@@ -7,7 +7,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { ArrowLeft, ClipboardList, FileText, Monitor, Plus, ReceiptText, ShoppingCart } from 'lucide-react';
 import TopBar from '@/components/ui/TopBar';
 import PageContainer from '@/components/ui/PageContainer';
-import PropostasContent, { type NegociosTab } from '@/components/erp/Negocios/propostas/PropostasContent';
+import PropostasContent, { invalidateNegociosCache, type NegociosTab } from '@/components/erp/Negocios/propostas/PropostasContent';
 import NegociosContratosContent from '@/components/erp/Negocios/contratos/NegociosContratosContent';
 import NegociosPdvContent from '@/components/erp/Negocios/pdv/NegociosPdvContent';
 import NovaPropostaPage from '@/components/erp/Negocios/shared/NovaPropostaPage';
@@ -261,6 +261,7 @@ export default function ErpNegociosPage() {
   const handleSavedSuccessExit = () => {
     setShowConfirmModal(false);
     setDestinoPendente(null);
+    invalidateNegociosCache();
     setCriacaoTipo(null);
     router.push(currentTabHref);
   };

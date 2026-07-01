@@ -14,7 +14,7 @@
  * - components/ - Componentes de UI reutiliz?veis
  */
 
-import { ArrowLeft, CalendarDays, CheckCircle, ChevronDown, CopyPlus, CreditCard, FileText, Layers3, Link2, Mail, MessageCircle, Package, Receipt, Settings2, Trash2, User, Wrench } from 'lucide-react';
+import { ArrowLeft, CalendarDays, CheckCircle, ChevronDown, CopyPlus, CreditCard, Eye, FileText, Layers3, Link2, Mail, MessageCircle, Package, Receipt, Settings2, Trash2, User, Wrench } from 'lucide-react';
 import { useState, useEffect, useMemo, useRef, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
@@ -42,6 +42,9 @@ import DetalhesCamposCustomizados, {
   normalizarTipoCampoCustomizado,
   type CampoCustomizadoConfig,
 } from './components/DetalhesCamposCustomizados';
+
+// Shared
+import ClienteDrawer from '@/components/erp/Negocios/shared/ClienteDrawer';
 
 // Utils
 import { calcularTotalGeral, gerarParcelas } from './utils/calculations';
@@ -237,6 +240,7 @@ export default function NovaPropostaPage({
   const [idEmpresa, setIdEmpresa] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [menuAcoesAberto, setMenuAcoesAberto] = useState(false);
+  const [clienteDrawerAberto, setClienteDrawerAberto] = useState(false);
   const [camposCustomizadosConfig, setCamposCustomizadosConfig] = useState<CampoCustomizadoConfig[]>([]);
   const [carregandoCamposCustomizados, setCarregandoCamposCustomizados] = useState(false);
   const menuAcoesRef = useRef<HTMLDivElement | null>(null);
@@ -1366,6 +1370,17 @@ export default function NovaPropostaPage({
 
   const acoesDocumento = useMemo<DocumentoAction[]>(
     () => [
+      {
+        id: 'ver_cliente',
+        label: 'Ver Cliente',
+        icon: <Eye size={16} />,
+        onClick: () => {
+          setClienteDrawerAberto(true);
+          setMenuAcoesAberto(false);
+        },
+        disabled: !clientes.clienteSelecionado?.id,
+        variant: 'outline',
+      } satisfies DocumentoAction,
       ...((tipo === 'proposta' || tipo === 'venda' || tipo === 'os')
         ? [
             {
@@ -1419,7 +1434,7 @@ export default function NovaPropostaPage({
         variant: 'outline',
       },
     ],
-    [documentoTemId, handleAprovarManual, handleCopiarDocumento, handleCopiarLink, handleEnviarEmail, handleEnviarWhatsApp, handleExcluirDocumento, tipo]
+    [documentoTemId, clientes.clienteSelecionado?.id, handleAprovarManual, handleCopiarDocumento, handleCopiarLink, handleEnviarEmail, handleEnviarWhatsApp, handleExcluirDocumento, tipo]
   );
 
   return (
@@ -1745,6 +1760,11 @@ export default function NovaPropostaPage({
         </div>
         </div>
       </form>
+      <ClienteDrawer
+        isOpen={clienteDrawerAberto}
+        onClose={() => setClienteDrawerAberto(false)}
+        clienteId={clientes.clienteSelecionado?.id}
+      />
       <style jsx global>{`
         .nova-proposta-theme input:not([type='checkbox']):not([type='radio']),
         .nova-proposta-theme select,
